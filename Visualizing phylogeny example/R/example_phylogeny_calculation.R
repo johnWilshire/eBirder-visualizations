@@ -4,7 +4,7 @@ library(ggplot2)
 library(readr)
 
 ## load data
-load("Data/corey_data.RData")
+load("data/corey_data.RData")
 
 ## first need to get the correct amount of lifers estimated
 life_list <- corey_data %>%

@@ -3,10 +3,12 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(tidyr)
+# devtools::install_github("dgrtwo/gganimate")
 library(gganimate)
+library(anytime)
 
 ## load data
-load("Data/corey_data.RData")
+load("data/corey_data.RData")
 
 ###########################
 ## submissions over time ##
@@ -35,6 +37,8 @@ checklists_over_time <- corey_data %>%
               axis.text.y = element_text(size=12, color='black'),
               panel.grid.major = element_blank(),
               panel.grid.minor = element_blank())
+
+print(checklists_over_time)
 
 # export gif
 checklists_over_time.a <- gganimate(checklists_over_time, title_frame=FALSE)

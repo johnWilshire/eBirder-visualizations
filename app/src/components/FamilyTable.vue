@@ -1,5 +1,6 @@
 <template lang="pug">
-#tree
+#family-table
+  h1.ui.center.aligned.header Observations per Family table
   table.ui.celled.center.aligned.padded.table
     thead
       th Order
@@ -15,9 +16,9 @@
 </template>
 
 <script>
-var fam = require('./../../../taxonomy/eBird_clements_checklist_family.json')
+var fam = require('taxonomy/eBird_clements_checklist_family.json')
 export default {
-  name: 'tree',
+  name: 'family-table',
   data: () => {
     return {
       fam: fam

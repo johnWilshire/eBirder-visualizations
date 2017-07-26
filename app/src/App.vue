@@ -1,17 +1,19 @@
 <template lang="pug">
 #app
   .ui.container
-    h1.ui.center.aligned.header Title
-    tree
+    h1.ui.center.aligned.header Some toy visualisations
+    over-time
+    family-table
 </template>
 
 <script>
-import Tree from './components/Tree'
-require('../node_modules/semantic-ui-css/semantic.min.css')
+import FamilyTable from './components/FamilyTable'
+import OverTime from './components/OverTime'
 export default {
   name: 'app',
   components: {
-    Tree
+    FamilyTable,
+    OverTime
   }
 }
 </script>
