@@ -1,6 +1,9 @@
 # eBirder-visualizations
 link to app site demo: https://coreytcallaghan.github.io/eBirder-visualizations/
 
+The project's theme video.
+[![Bird is the word](http://i.imgur.com/5hzxXgj.jpg)](https://www.youtube.com/watch?v=aPrtFxd9u9Y "Bird is the word")
+
 ## Potential visualization ideas
 
 #### Phylogenetic tree
