@@ -7,11 +7,10 @@ p_load(jsonlite, dplyr, readr)
 read_csv("taxonomy/eBird-Clements-Checklist-v2016-10-August-2016.csv") %>%
   filter(Category=="species") -> lo
 
-
 lo %>% group_by(Order, Family) %>%
-  summarize(gs = `Scientific name`[1],
-            gs = sub(" ", "_", gs),
-            sp_count=n()) %>% 
+  summarize(sp_count=n()) %>% 
+  ungroup() %>%
+  mutate(fam =  gsub(' .*', '', Family)) %>% 
   write_json("taxonomy/eBird_clements_checklist_family.json")
 
 lo %>% group_by(Order) %>%

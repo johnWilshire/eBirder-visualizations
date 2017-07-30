@@ -12,6 +12,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "d3-scale-chromatic": "^1.1.1",
     "gh-pages": "^1.0.0",
     "plotly.js": "^1.29.1",
     "pug": "^2.0.0-rc.2",

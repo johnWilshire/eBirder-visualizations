@@ -11,7 +11,8 @@ import {anchorTodx, drawLink, toPromise, findInParents, mapMany, removeTextAndGr
 
 import * as d3 from 'd3'
 import * as d3Hierarchy from 'd3-hierarchy'
-Object.assign(d3, d3Hierarchy)
+import * as d3ScaleChromatic from 'd3-scale-chromatic'
+Object.assign(d3, d3Hierarchy, d3ScaleChromatic)
 
 const layout = {
   euclidean,
@@ -214,6 +215,7 @@ export default {
         .attr('opacity', 1))
 
       allNodes.append('circle')
+        .attr('fill', d => d3.interpolateYlGnBu(d.data.value))
 
       text.attr('x', d => { return d.textInfo ? d.textInfo.x : 0 })
           .attr('dx', function (d) { return d.textInfo ? anchorTodx(d.textInfo.anchor, this) : 0 })
@@ -238,7 +240,7 @@ export default {
       const exitingNodesPromise = toPromise(exitingNodes.transition().duration(this.duration)
                   .attr('transform', d => translate(forExit(d), this.layout))
                   .attr('opacity', 0).remove())
-      exitingNodes.select('circle').attr('r', 1e-6)
+      exitingNodes.select('circle').attr('r', 1e6)
 
       const leaves = root.leaves()
       const extremeNodes = text.filter(d => leaves.indexOf(d) !== -1).nodes()

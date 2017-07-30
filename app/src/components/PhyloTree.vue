@@ -19,7 +19,8 @@ div
       .ui.large.left.rounded.floated.image(v-if="summaryUrl")
         img(:src="summaryUrl")
         .ui.bottom.attached.label {{summaryInfo.imageCaption}}
-      // p {{ summaryInfo }}
+      p(v-if="sp_count") {{ seen_count }} Species Spotted out of {{ sp_count }}
+
       p {{ summaryText }}
   .ui.raised.segment
     .ui.header todo
@@ -34,9 +35,16 @@ div
 
 <script>
 import newick from 'tree/jetz_family_tree'
+var fam = require('data/corey_family_list')
 import {tree} from './vue-d3-tree'
 import wiki from 'wikijs'
-// <!-- Copyright 2011 Jason Davies https://github.com/jasondavies/newick.js -->
+
+var seen = fam.reduce((res, x) => {
+  x.prop_seen = x.seen_count / x.sp_count
+  res[x.Family] = x
+  return res
+}, {})
+// <!-- A modified version of  https://github.com/jasondavies/newick.js -->
 var parseNewick = (s) => {
   var ancestors = []
   var tree = {}
@@ -64,7 +72,9 @@ var parseNewick = (s) => {
         var x = tokens[i - 1]
         if (x === ')' || x === '(' || x === ',') {
           token = token.replace(/_/g, ' ')
-          tree.name = token.replace(/-.*/, '')
+          var name = token.replace(/ -.*/, '')
+          tree.name = name
+          tree.value = seen[name] ? seen[name].prop_seen : 0
           tree.common = token.replace(/.*-/, '')
         } else if (x === ':') {
           tree.length = parseFloat(token)
@@ -80,6 +90,11 @@ export default {
     return {
       treeData: parseNewick(newick.newick),
       summaryName: 'Click a family!',
+
+      seen_count: 0,
+      sp_count: 0,
+      seen: seen,
+
       summaryCommon: '',
       summaryText: '',
       summaryUrl: '',
@@ -93,6 +108,8 @@ export default {
       this.summaryName = x.data.name
       this.summaryLink = 'https://en.wikipedia.org/wiki/' + x.data.name
       this.summaryCommon = x.data.common
+      this.seen_count = this.seen[x.data.name].seen_count
+      this.sp_count = this.seen[x.data.name].sp_count
     },
     getSummary: function () {
       var vm = this
@@ -134,8 +151,8 @@ export default {
   margin: 0 auto;
 }
 .treeclass .nodetree  circle {
-  fill: #999;
-  r: 2;
+  r: 3;
+  stroke: 1;
 }
 
 .treeclass .node--internal circle {
