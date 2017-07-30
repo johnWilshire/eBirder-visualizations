@@ -1,6 +1,7 @@
 <template lang="pug">
 #over-time
   div(ref="cumulative")
+  .ui.divider
   div(ref="oneoff")
 
 </template>
@@ -16,14 +17,14 @@ export default {
   mounted () {
     Plotly.plot(this.$refs.cumulative, [
       {
-        x: species.map((x) => x.Year_mon),
-        y: species.map((x) => x.cumulative),
+        x: species.map(x => x.Year_mon),
+        y: species.map(x => x.cumulative),
         type: 'scatter',
         name: 'Cumulative Species'
       },
       {
-        x: submissions.map((x) => x.Year_mon),
-        y: submissions.map((x) => x.cumulative),
+        x: submissions.map(x => x.Year_mon),
+        y: submissions.map(x => x.cumulative),
         type: 'scatter',
         name: 'Cumulative Submissions'
       }
@@ -36,14 +37,14 @@ export default {
 
     Plotly.plot(this.$refs.oneoff, [
       {
-        x: species.map((x) => x.Year_mon),
-        y: species.map((x) => x.species),
+        x: species.map(x => x.Year_mon),
+        y: species.map(x => x.species),
         type: 'scatter',
         name: 'Species Observations'
       },
       {
-        x: submissions.map((x) => x.Year_mon),
-        y: submissions.map((x) => x.checklists),
+        x: submissions.map(x => x.Year_mon),
+        y: submissions.map(x => x.checklists),
         type: 'scatter',
         name: 'Checklists Submitted'
       }

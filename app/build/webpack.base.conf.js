@@ -18,14 +18,18 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
+  externals: {
+    'isomorphic-fetch': 'fetch'
+  },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       'plotly.js': 'plotly.js/dist/plotly',
-      'data': './../../../data/'
-      'taxonomy': './../../../taxonomy/'
+      'data': './../../../data/',
+      'taxonomy': './../../../taxonomy/',
+      'tree': './../../../tree/'
     }
   },
   module: {
