@@ -6,7 +6,7 @@ read_csv("taxonomy/eBird-Clements-Checklist-v2016-10-August-2016.csv") %>%
   filter(Category=="species")->lo
 lo$`Scientific name`<-sub(" ","_",lo$`Scientific name`)
 
-corey_df<-data.frame(gs=corey_data$SCIENTIFIC_NAME)
+corey_df<-data.frame(gs=corey_data$Scientific_Name)
 corey_df$Family<-lo$Family[match(sub(" ","_",corey_df$gs),lo$`Scientific name`)]
 corey_df$Family <-  gsub(' .*', '', corey_df$Family)
 
