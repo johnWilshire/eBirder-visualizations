@@ -15,7 +15,7 @@ function anchorTodx (d, el) {
 function drawLink (source, target, { transformNode }) {
   // ssource = transformNode(source.x, source.y)
   // target = transformNode(target.x, target.y)
-  return linkStep(source.x, source.y, target.x, target.y)
+  return linkStep(target.x, target.y, source.x, source.y)
 }
 
 function linkStep (startAngle, startRadius, endAngle, endRadius) {
@@ -23,11 +23,11 @@ function linkStep (startAngle, startRadius, endAngle, endRadius) {
   var s0 = Math.sin(startAngle)
   var c1 = Math.cos(endAngle = (endAngle - 90) / 180 * Math.PI)
   var s1 = Math.sin(endAngle)
+  // move to this point
   var out = 'M' + startRadius * c0 + ',' + startRadius * s0
-  if (endAngle === startAngle) {
-    out += 'A' + startRadius + ',' +
-       startRadius + ' 0 0 ' + (endAngle > startAngle ? 1 : 0) +
-        ' ' + startRadius * c1 + ',' + startRadius * s1
+  if (endAngle !== startAngle) {
+    out += 'A' + startRadius + ',' + startRadius + ' 0 0 ' +
+    (endAngle > startAngle ? 1 : 0) + ' ' + startRadius * c1 + ',' + startRadius * s1
   }
   return out + 'L' + endRadius * c1 + ',' + endRadius * s1
 }

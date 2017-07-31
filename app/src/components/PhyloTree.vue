@@ -22,14 +22,7 @@ div
       p(v-if="sp_count") {{ seen_count }} Species Spotted out of {{ sp_count }}
 
       p {{ summaryText }}
-  .ui.raised.segment
-    .ui.header todo
-    ul
-      li color branches
-      li layout
-      li populate tree data with birding data
-      li vis that data round the outside
-      li mouse over events
+      p Data and Images: Wikipedia
 
 </template>
 
@@ -75,6 +68,7 @@ var parseNewick = (s) => {
           var name = token.replace(/ -.*/, '')
           tree.name = name
           tree.value = seen[name] ? seen[name].prop_seen : 0
+          tree.radius = seen[name] ? Math.sqrt(seen[name].sp_count) : 1
           tree.common = token.replace(/.*-/, '')
         } else if (x === ':') {
           tree.length = parseFloat(token)
@@ -151,8 +145,7 @@ export default {
   margin: 0 auto;
 }
 .treeclass .nodetree  circle {
-  r: 3;
-  stroke: 1;
+  r: 4;
 }
 
 .treeclass .node--internal circle {

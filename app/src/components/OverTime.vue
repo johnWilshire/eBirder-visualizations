@@ -10,12 +10,12 @@
 var species = require('data/corey_new_species_over_time.json')
 var submissions = require('data/corey_submissions_over_time.json')
 
-import Plotly from 'plotly.js'
+import {plot} from 'plotly.js'
 
 export default {
   name: 'over-time',
   mounted () {
-    Plotly.plot(this.$refs.cumulative, [
+    plot(this.$refs.cumulative, [
       {
         x: species.map(x => x.Year_mon),
         y: species.map(x => x.cumulative),
@@ -35,7 +35,7 @@ export default {
       }
     }, {displayModeBar: false})
 
-    Plotly.plot(this.$refs.oneoff, [
+    plot(this.$refs.oneoff, [
       {
         x: species.map(x => x.Year_mon),
         y: species.map(x => x.species),

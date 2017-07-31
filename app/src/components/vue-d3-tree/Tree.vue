@@ -213,7 +213,7 @@ export default {
       const allNodesPromise = toPromise(allNodes.transition().duration(this.duration)
         .attr('transform', d => translate(d, this.layout))
         .attr('opacity', 1))
-
+      // the outter circle
       allNodes.append('circle')
         .attr('fill', d => d3.interpolateYlGnBu(d.data.value))
 
