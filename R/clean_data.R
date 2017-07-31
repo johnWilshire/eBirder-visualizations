@@ -9,11 +9,11 @@ library(tidyr)
 library(anytime)
 
 ## Read in eBird data
-corey_data <- read_csv("Data/corey_data.csv")
+corey_data <- read_csv("data/eBird data/corey_data.csv")
 colnames(corey_data) <- gsub(" ", "_", colnames(corey_data))
 colnames(corey_data) <- gsub("/", "_", colnames(corey_data))
 
-dat.clean <- corey_data %>%
+corey_data <- corey_data %>%
   # remove hybrids and domestics
   filter(!grepl("hybrid|Domestic", Common_Name)) %>%
   # remove spuhs
@@ -29,3 +29,11 @@ dat.clean <- corey_data %>%
          Month = month(Date)) %>%
   unite(., Year_mon, Year, Month, sep="-") %>%
   mutate(Year_mon = anydate(Year_mon))
+
+
+
+### remove all but my data
+rm(list=setdiff(ls(), c("corey_data")))
+
+### save study site data as RData file
+save.image("data/corey_data.RData")

@@ -37,14 +37,14 @@ ggplot() +
 ## add all points to the map
 ggplot() +
   mapworld +
-  geom_point(data=corey_checklists, aes(x=LONGITUDE, y=LATITUDE), color='red', size=1.25)
+  geom_point(data=corey_checklists, aes(x=LONGITUDE, y=LATITUDE), color='red', size=3.5)
 
 
 ## try to animate it
 p1 <- ggplot()+
   mapworld+
   geom_point(data=corey_checklists, aes(x=LONGITUDE, y=LATITUDE, frame=date, cumulative=FALSE),
-             color='red', size=1.25)
+             color='red', size=3.5)
 
 pa1 <- gganimate(p1, title_frame=FALSE)
 gganimate_save(pa1,
