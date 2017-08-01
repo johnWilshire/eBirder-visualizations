@@ -8,131 +8,119 @@ div
     nodeText="name"
     :margin-x="0"
     :margin-y="0"
+    :person="selected"
     v-on:clicked="clicked")
+
   .ui.raised.very.padded.container
     .ui.clearing.segment(v-bind:class="{ loading: loading }")
-      a(v-bind:href="summaryLink" target="blank")
+      a(v-bind:href="summary.link" target="blank")
         h2.ui.center.aligned.header
           .content {{summaryName}}
-          .sub.header {{summaryCommon}}
+          .sub.header {{summary.common}}
       .ui.divider
-      .ui.large.left.rounded.floated.image(v-if="summaryUrl")
-        img(:src="summaryUrl")
-        .ui.bottom.attached.label {{summaryInfo.imageCaption}}
-      p(v-if="sp_count") {{ seen_count }} Species Spotted out of {{ sp_count }}
+      .ui.one.column.wide.grid
+        .column
+          table.ui.center.aligned.table
+            thead
+              tr
+                th Total in Family
+                th(v-on:click="recolor('corey')"
+                  v-bind:class="[selected == 'corey' ? 'positive' : '']") Corey
+                th(v-on:click="recolor('jim')"
+                  v-bind:class="[selected == 'jim' ? 'positive' : '']") Jim
+                th(v-on:click="recolor('will')"
+                  v-bind:class="[selected == 'will' ? 'positive' : '']") Will
+            tbody
+              tr
+                td {{ people.sp_count }}
+                td {{ people.corey }}
+                td {{ people.jim }}
+                td {{ people.will }}
+      .ui.divider
+      h3.ui.center.aligned.header Summary
+      .ui.two.column.wide.stackable.padded.grid
+        .column
+          .ui.large.left.rounded.floated.image(v-if="summaryImage")
+            img(:src="summaryImage")
+            .ui.bottom.attached.label {{summary.info.imageCaption}}
+        .column
+          p {{ summary.text }}
 
-      p {{ summaryText }}
-      p Data and Images: Wikipedia
-
+  attribution
 </template>
 
 <script>
 import newick from 'tree/jetz_family_tree'
-var fam = require('data/corey_family_list')
 import {tree} from './vue-d3-tree'
 import wiki from 'wikijs'
-
-var seen = fam.reduce((res, x) => {
-  x.prop_seen = x.seen_count / x.sp_count
-  res[x.Family] = x
-  return res
-}, {})
-// <!-- A modified version of  https://github.com/jasondavies/newick.js -->
-var parseNewick = (s) => {
-  var ancestors = []
-  var tree = {}
-  var tokens = s.split(/\s*(;|\(|\)|,|:)\s*/)
-  for (var i = 0; i < tokens.length; i++) {
-    var token = tokens[i]
-    switch (token) {
-      case '(': // new children
-        var subtree = {}
-        tree.children = [subtree]
-        ancestors.push(tree)
-        tree = subtree
-        break
-      case ',': // another branch
-        subtree = {}
-        ancestors[ancestors.length - 1].children.push(subtree)
-        tree = subtree
-        break
-      case ')': // optional name next
-        tree = ancestors.pop()
-        break
-      case ':': // optional length next
-        break
-      default:
-        var x = tokens[i - 1]
-        if (x === ')' || x === '(' || x === ',') {
-          token = token.replace(/_/g, ' ')
-          var name = token.replace(/ -.*/, '')
-          tree.name = name
-          tree.value = seen[name] ? seen[name].prop_seen : 0
-          tree.radius = seen[name] ? Math.sqrt(seen[name].sp_count) : 1
-          tree.common = token.replace(/.*-/, '')
-        } else if (x === ':') {
-          tree.length = parseFloat(token)
-        }
-    }
-  }
-  return tree
-}
-
+import attribution from './Attribution'
+// think of a better name
+var treeData = require('./parseNewick')
 export default {
   name: 'phylo-tree',
   data () {
     return {
-      treeData: parseNewick(newick.newick),
+      treeData: treeData.parseNewick(newick.newick),
       summaryName: 'Click a family!',
+      summary: {info: ''},
+      summaryImage: '',
 
-      seen_count: 0,
-      sp_count: 0,
-      seen: seen,
+      selected: 'will',
 
-      summaryCommon: '',
-      summaryText: '',
-      summaryUrl: '',
-      summaryLink: '',
-      summaryInfo: '',
+      people: {
+        sp_count: 0,
+        corey: 0,
+        jim: 0,
+        will: 0
+      },
+      seen: treeData.seen,
       loading: false
     }
   },
   methods: {
     clicked: function (x) {
+      this.people.sp_count = this.seen[x.data.name].sp_count
+
       this.summaryName = x.data.name
-      this.summaryLink = 'https://en.wikipedia.org/wiki/' + x.data.name
-      this.summaryCommon = x.data.common
-      this.seen_count = this.seen[x.data.name].seen_count
-      this.sp_count = this.seen[x.data.name].sp_count
+      this.summaryImage = ''
+      this.summary.link = 'https://en.wikipedia.org/wiki/' + x.data.name
+      this.summary.common = x.data.common
+
+      this.people.corey = x.data.corey
+      this.people.will = x.data.will
+      this.people.jim = x.data.jim
     },
     getSummary: function () {
       var vm = this
       var page = wiki({apiUrl: 'https://en.wikipedia.org/w/api.php'}).page(this.summaryName)
       page.then(page => page.mainImage())
         .then(function (img) {
-          vm.summaryUrl = img
+          vm.summaryImage = img
         })
       page.then(page => page.summary())
         .then(function (summary) {
-          vm.summaryText = summary
+          vm.summary.text = summary
           vm.loading = false
         })
       page.then(page => page.info())
         .then(function (x) {
-          vm.summaryInfo = x
+          vm.summary.info = x
         })
+    },
+    recolor: function (person) {
+      this.selected = person
     }
   },
   watch: {
     summaryName: function (newsummary) {
-      this.summaryText = 'Waiting for Wikipedia.'
+      this.summary.text = 'Waiting for Wikipedia.'
       this.loading = true
-      this.summaryUrl = ''
       this.getSummary()
     }
   },
   components: {
-    tree
+    tree,
+    attribution
   }
 }
 </script>
@@ -145,7 +133,7 @@ export default {
   margin: 0 auto;
 }
 .treeclass .nodetree  circle {
-  r: 4;
+  r: 3;
 }
 
 .treeclass .node--internal circle {
@@ -177,7 +165,11 @@ export default {
   stroke-width: 1.5px;
 }
 
-.hidden {
-  display: none;
+th {
+  cursor: pointer !important;
+}
+
+.positive {
+  color: #acdfb7 !important;
 }
 </style>

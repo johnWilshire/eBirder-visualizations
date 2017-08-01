@@ -57,6 +57,10 @@ const props = {
     type: String,
     required: true
   },
+  person: {
+    type: String,
+    default: 'corey'
+  },
   identifier: {
     type: Function,
     default: () => i++
@@ -214,8 +218,12 @@ export default {
         .attr('transform', d => translate(d, this.layout))
         .attr('opacity', 1))
       // the outter circle
+      // this is where we color the nodes
+
       allNodes.append('circle')
-        .attr('fill', d => d3.interpolateYlGnBu(d.data.value))
+        .attr('fill', d => {
+          return d3.interpolateYlGnBu(d.data[this.person] / d.data.sp_count + 0.2)
+        })
 
       text.attr('x', d => { return d.textInfo ? d.textInfo.x : 0 })
           .attr('dx', function (d) { return d.textInfo ? anchorTodx(d.textInfo.anchor, this) : 0 })
@@ -455,6 +463,13 @@ export default {
         return
       }
       this.internaldata.tree = this.tree
+      this.redraw()
+    },
+
+    person () {
+      if (!this.internaldata.tree) {
+        return
+      }
       this.redraw()
     },
 
