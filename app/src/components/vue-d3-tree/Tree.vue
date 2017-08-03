@@ -65,6 +65,10 @@ const props = {
     type: Function,
     default: () => i++
   },
+  ramp: { // color ramp used for vis, will work for one of these https://github.com/d3/d3-scale-chromatic
+    String,
+    default: 'interpolateYlGnBu'
+  },
   zoomable: {
     type: Boolean,
     default: false
@@ -222,7 +226,7 @@ export default {
 
       allNodes.append('circle')
         .attr('fill', d => {
-          return d3.interpolateYlGnBu(d.data[this.person] / d.data.sp_count + 0.2)
+          return d3[this.ramp](d.data[this.person] / d.data.sp_count)
         })
 
       text.attr('x', d => { return d.textInfo ? d.textInfo.x : 0 })

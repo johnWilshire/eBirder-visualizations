@@ -8,15 +8,14 @@ div
     nodeText="name"
     :margin-x="0"
     :margin-y="0"
-    :person="selected"
-    v-on:clicked="clicked")
+    :person="selectedPerson"
+    v-on:clicked="clicked"
+    :zoomable="false"
+    ramp="interpolateYlGnBu")
 
-  .ui.raised.very.padded.container
+  .ui.raised.container
     .ui.clearing.segment(v-bind:class="{ loading: loading }")
-      a(v-bind:href="summary.link" target="blank")
-        h2.ui.center.aligned.header
-          .content {{summaryName}}
-          .sub.header {{summary.common}}
+      my-header(v-bind:main="selectedLeaf", v-bind:sub="common")
       .ui.divider
       .ui.one.column.wide.grid
         .column
@@ -25,11 +24,11 @@ div
               tr
                 th Total in Family
                 th(v-on:click="recolor('corey')"
-                  v-bind:class="[selected == 'corey' ? 'positive' : '']") Corey
+                  v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']") Corey
                 th(v-on:click="recolor('jim')"
-                  v-bind:class="[selected == 'jim' ? 'positive' : '']") Jim
+                  v-bind:class="[selectedPerson == 'jim' ? 'positive' : '']") Jim
                 th(v-on:click="recolor('will')"
-                  v-bind:class="[selected == 'will' ? 'positive' : '']") Will
+                  v-bind:class="[selectedPerson == 'will' ? 'positive' : '']") Will
             tbody
               tr
                 td {{ people.sp_count }}
@@ -37,23 +36,16 @@ div
                 td {{ people.jim }}
                 td {{ people.will }}
       .ui.divider
-      h3.ui.center.aligned.header Summary
-      .ui.two.column.wide.stackable.padded.grid
-        .column
-          .ui.large.left.rounded.floated.image(v-if="summaryImage")
-            img(:src="summaryImage")
-            .ui.bottom.attached.label {{summary.info.imageCaption}}
-        .column
-          p {{ summary.text }}
-
+      wiki-summary(:selected="selectedLeaf")
   attribution
 </template>
 
 <script>
 import newick from 'tree/jetz_family_tree'
 import {tree} from './vue-d3-tree'
-import wiki from 'wikijs'
+import WikiSummary from './WikiSummary'
 import attribution from './Attribution'
+import myHeader from './Header'
 // think of a better name
 var treeData = require('./parseNewick')
 export default {
@@ -61,12 +53,8 @@ export default {
   data () {
     return {
       treeData: treeData.parseNewick(newick.newick),
-      summaryName: 'Click a family!',
-      summary: {info: ''},
-      summaryImage: '',
-
-      selected: 'will',
-
+      selectedPerson: 'will',
+      selectedLeaf: '',
       people: {
         sp_count: 0,
         corey: 0,
@@ -81,53 +69,44 @@ export default {
     clicked: function (x) {
       this.people.sp_count = this.seen[x.data.name].sp_count
 
-      this.summaryName = x.data.name
-      this.summaryImage = ''
-      this.summary.link = 'https://en.wikipedia.org/wiki/' + x.data.name
-      this.summary.common = x.data.common
-
       this.people.corey = x.data.corey
       this.people.will = x.data.will
       this.people.jim = x.data.jim
-    },
-    getSummary: function () {
-      var vm = this
-      var page = wiki({apiUrl: 'https://en.wikipedia.org/w/api.php'}).page(this.summaryName)
-      page.then(page => page.mainImage())
-        .then(function (img) {
-          vm.summaryImage = img
-        })
-      page.then(page => page.summary())
-        .then(function (summary) {
-          vm.summary.text = summary
-          vm.loading = false
-        })
-      page.then(page => page.info())
-        .then(function (x) {
-          vm.summary.info = x
-        })
+
+      this.selectedLeaf = x.data.name
     },
     recolor: function (person) {
-      this.selected = person
+      this.selectedPerson = person
     }
   },
   watch: {
     summaryName: function (newsummary) {
       this.summary.text = 'Waiting for Wikipedia.'
       this.loading = true
-      this.getSummary()
+    }
+  },
+  computed: {
+    common () {
+      var d = this.seen[this.selectedLeaf]
+      if (d) {
+        var c = d.Family.match(/\((.*)\)/)[1]
+        return 'Order: ' + d.Order + ', Common: ' + c
+      }
+      return ''
     }
   },
   components: {
     tree,
-    attribution
+    attribution,
+    WikiSummary,
+    myHeader
   }
 }
 </script>
 
 <style>
 .tree {
-  height: 1000px;
+  height: 900px;
   max-height: 1000px;
   width: 100%;
   margin: 0 auto;
