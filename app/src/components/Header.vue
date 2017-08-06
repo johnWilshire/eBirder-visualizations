@@ -1,8 +1,8 @@
 
 <template lang="pug">
-a(v-bind:href="link" target="blank")
-  h2.ui.center.aligned.header {{main}}
-    .sub.header {{sub}}
+h2.ui.center.aligned.header
+  a(v-bind:href="link" target="blank") {{main}}
+  .sub.header {{sub}}
 </template>
 
 <script>

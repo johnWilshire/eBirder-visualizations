@@ -45,6 +45,12 @@ const props = {
       return layouts.indexOf(value) !== -1
     }
   },
+  color: {
+    type: Function,
+    default: d3.scaleOrdinal()
+                .domain(['Bacteria', 'Eukaryota', 'Archaea'])
+                .range(d3.schemeCategory10)
+  },
   marginX: {
     type: Number,
     default: 20
@@ -118,7 +124,7 @@ export default {
           .attr('width', size.width)
           .attr('height', size.height)
     if (size.width === 400) {
-      svg = svg.attr('viewBox', '-300 -270 1000 1000')
+      svg = svg.attr('viewBox', '-300 -270 1000 1000') // kinda a hack to make it more usable on mobile devices
     }
 
     let g = null
@@ -209,6 +215,7 @@ export default {
         })
 
       updateLinks.attr('d', d => drawLink(originBuilder(d), originBuilder(d), this.layout))
+        .attr('stroke', x => x.color ? x.color : '#555')
 
       const updateAndNewLinks = links.merge(updateLinks)
       const updateAndNewLinksPromise = toPromise(updateAndNewLinks.transition().duration(this.duration).attr('d', d => drawLink(d, d.parent, this.layout)))
@@ -285,6 +292,11 @@ export default {
         this.expand(d)
       }
     },
+    setColor (d) {
+      var name = d.data.name
+      d.color = this.color.domain().indexOf(name) >= 0 ? this.color(name) : d.parent ? d.parent.color : null
+      if (d.children) d.children.forEach(this.setColor)
+    },
 
     onData (data) {
       if (!data) {
@@ -305,6 +317,7 @@ export default {
       root.y = 0
       root.x0 = root.x
       root.y0 = root.y
+      this.setColor(root)
       this.redraw()
     },
 
