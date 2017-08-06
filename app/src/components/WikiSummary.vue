@@ -1,11 +1,10 @@
 <template lang="pug">
-.ui.grid(v-if="selected")
-  .two.column.row
-    .wide.column(v-if="imageUrl")
-      .ui.fluid.rounded.image
+.ui.stackable.two.column.grid(v-if="selected")
+    .column(v-if="imageUrl")
+      .ui.rounded.fluid.image
         img(:src="imageUrl")
-        .ui.bottom.attached.label {{ caption ? caption : 'No caption found.'}}
-    .wide.column
+        .ui.bottom.attached.label {{ info ? info.imageCaption : 'No caption found.'}}
+    .column
       p {{ text }}
 </template>
 
@@ -15,32 +14,21 @@ var wikiApi = wiki({apiUrl: 'https://en.wikipedia.org/w/api.php'})
 export default {
   name: 'wiki-summary',
   props: ['selected'],
-  computed: {
-    caption () {
-      return this.info.imageCaption ? this.info.imageCaption : ''
+  data () {
+    return {
+      loading: true
     }
   },
   asyncComputed: {
-    imageUrl: async function () {
-      return await wikiApi.page(this.selected).then(x => x.mainImage())
+    imageUrl () {
+      return wikiApi.page(this.selected).then(x => x.mainImage())
     },
     info () {
       return wikiApi.page(this.selected).then(x => x.info())
     },
-    text: {
-      get () {
-        return wikiApi.page(this.selected).then(x => x.summary())
-      },
-      default () {
-        return 'Loading summary for ' + this.selected
-      }
+    text () {
+      return wikiApi.page(this.selected).then(x => x.summary())
     }
   }
 }
 </script>
-
-<style>
-#img {
-  margin: 0 auto !important;
-}
-</style>

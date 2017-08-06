@@ -1,6 +1,7 @@
 <template lang="pug">
 div
-  tree(class="tree" 
+  // iframe
+  tree.tree(
     :data="treeData" 
     layoutType="radial"
     type="cluster"
@@ -10,33 +11,31 @@ div
     :margin-y="0"
     :person="selectedPerson"
     v-on:clicked="clicked"
-    :zoomable="false"
     ramp="interpolateYlGnBu")
 
-  .ui.raised.container
-    .ui.clearing.segment(v-bind:class="{ loading: loading }")
-      my-header(v-bind:main="selectedLeaf", v-bind:sub="common")
-      .ui.divider
-      .ui.one.column.wide.grid
-        .column
-          table.ui.center.aligned.table
-            thead
-              tr
-                th Total in Family
-                th(v-on:click="recolor('corey')"
-                  v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']") Corey
-                th(v-on:click="recolor('jim')"
-                  v-bind:class="[selectedPerson == 'jim' ? 'positive' : '']") Jim
-                th(v-on:click="recolor('will')"
-                  v-bind:class="[selectedPerson == 'will' ? 'positive' : '']") Will
-            tbody
-              tr
-                td {{ people.sp_count }}
-                td {{ people.corey }}
-                td {{ people.jim }}
-                td {{ people.will }}
-      .ui.divider
-      wiki-summary(:selected="selectedLeaf")
+  .ui.raised.container.segment(v-bind:class="{ loading: loading }")
+    my-header(v-bind:main="selectedLeaf ? selectedLeaf : 'Select a family to begin'", v-bind:sub="common")
+    .ui.divider
+    .ui.one.column.wide.grid
+      .column
+        table.ui.center.aligned.single.line.table
+          thead
+            tr
+              th Total in Family
+              th(v-on:click="recolor('corey')"
+                v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']") Corey
+              th(v-on:click="recolor('jim')"
+                v-bind:class="[selectedPerson == 'jim' ? 'positive' : '']") Jim
+              th(v-on:click="recolor('will')"
+                v-bind:class="[selectedPerson == 'will' ? 'positive' : '']") Will
+          tbody
+            tr
+              td {{ people.sp_count }}
+              td {{ people.corey }}
+              td {{ people.jim }}
+              td {{ people.will }}
+    .ui.divider
+    wiki-summary#summary(:selected="selectedLeaf")
   attribution
 </template>
 
@@ -72,17 +71,12 @@ export default {
       this.people.corey = x.data.corey
       this.people.will = x.data.will
       this.people.jim = x.data.jim
+      this.$scrollTo('#summary')
 
       this.selectedLeaf = x.data.name
     },
     recolor: function (person) {
       this.selectedPerson = person
-    }
-  },
-  watch: {
-    summaryName: function (newsummary) {
-      this.summary.text = 'Waiting for Wikipedia.'
-      this.loading = true
     }
   },
   computed: {
@@ -106,10 +100,16 @@ export default {
 
 <style>
 .tree {
-  height: 900px;
-  max-height: 1000px;
-  width: 100%;
   margin: 0 auto;
+  height: 900px;
+  width: 1000px;
+}
+
+@media (max-width: 600px) {
+  .tree {
+    height: 400px;
+    width: 400px;
+  }
 }
 .treeclass .nodetree  circle {
   r: 3;

@@ -19,6 +19,7 @@
     "semantic-ui-css": "^2.2.11",
     "vue": "^2.3.3",
     "vue-async-computed": "^3.2.1",
+    "vue-scrollto": "^2.7.2",
     "vued3tree": "^3.4.2",
     "wikijs": "^3.1.4"
   },

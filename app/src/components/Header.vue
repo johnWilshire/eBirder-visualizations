@@ -1,9 +1,8 @@
 
 <template lang="pug">
-#my-header
-  a(v-bind:href="link" target="blank")
-    h2.ui.center.aligned.header {{main}}
-      .sub.header {{sub}}
+a(v-bind:href="link" target="blank")
+  h2.ui.center.aligned.header {{main}}
+    .sub.header {{sub}}
 </template>
 
 <script>
@@ -17,3 +16,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+a {
+  margin: 1em;
+}
+</style>

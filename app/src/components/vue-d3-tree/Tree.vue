@@ -1,5 +1,5 @@
 <template>
-  <div class="viewport treeclass" v-resize="resize">
+  <div class="treeclass" v-resize="resize">
   </div>
 </template>
 <script>
@@ -114,9 +114,13 @@ export default {
 
   mounted () {
     const size = this.getSize()
-    const svg = d3.select(this.$el).append('svg')
+    var svg = d3.select(this.$el).append('svg')
           .attr('width', size.width)
           .attr('height', size.height)
+    if (size.width === 400) {
+      svg = svg.attr('viewBox', '-300 -270 1000 1000')
+    }
+
     let g = null
     let zoom = null
 

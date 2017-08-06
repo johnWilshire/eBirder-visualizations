@@ -25,8 +25,4 @@ export default {
 h1 {
   text-align: center;  
 }
-
-#app{
-  margin: 1em;
-}
 </style>

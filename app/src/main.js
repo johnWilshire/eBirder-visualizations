@@ -3,10 +3,13 @@
 import Vue from 'vue'
 import App from './App'
 import AsyncComputed from 'vue-async-computed'
+import VueScrollTo from 'vue-scrollto'
 
 Vue.config.productionTip = false
 
 Vue.use(AsyncComputed)
+
+Vue.use(VueScrollTo)
 
 /* eslint-disable no-new */
 new Vue({
