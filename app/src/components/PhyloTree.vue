@@ -13,23 +13,19 @@ div
     ramp="interpolateYlGnBu"
     )
 
-  .ui.raised.container.segment(v-bind:class="{ loading: loading }")
+  .ui.raised.container.segment
     my-header(v-bind:main="selectedLeaf ? selectedLeaf : 'Select a family to begin'", v-bind:sub="common")
     .ui.horizontal.divider Which Tree:
-    .ui.form.tree-form
-      .inline.fields
-        .field
-          .ui.radio.checkbox
-            input(type='radio' v-model="selectedTree" value="bird" checked='checked')
-            label Birds
-        .field
-          .ui.radio.checkbox
-            input(type='radio' v-model="selectedTree"  value="life")
-            label Life
-        .field
-          .ui.radio.checkbox
-            input(type='radio' v-model="selectedTree"  value="vege")
-            label Vegetables
+    .ui.center.aligned.basic.segment
+      .ui.radio.checkbox
+        input(type='radio' v-model="selectedTree" value="bird" checked='checked')
+        label Birds
+      .ui.radio.checkbox
+        input(type='radio' v-model="selectedTree"  value="vege")
+        label Vegetables
+      .ui.radio.checkbox
+        input(type='radio' v-model="selectedTree"  value="life")
+        label Life
     .ui.divider(v-if="selectedTree === 'bird'")
     table.ui.center.aligned.single.line.table(v-if="selectedTree === 'bird'")
       thead
@@ -82,8 +78,7 @@ export default {
         will: 0
       },
       selectedTree: 'bird',
-      seen: parseNewick.seen,
-      loading: false
+      seen: parseNewick.seen
     }
   },
   methods: {
@@ -112,6 +107,7 @@ export default {
   },
   watch: {
     selectedTree (newValue) {
+      this.selectedLeaf = ''
       this.treeData = trees[newValue]
     }
   },
@@ -135,8 +131,8 @@ export default {
 </script>
 
 <style>
-.tree-form {
-  padding: 0 45%;
+label {
+  padding-right: 1em;
 }
 .tree {
   margin: 0 auto;
@@ -148,9 +144,6 @@ export default {
   .tree {
     height: 400px;
     width: 400px;
-  }
-  .tree-form {
-    padding: 0 30%;
   }
 }
 .treeclass .nodetree  circle {

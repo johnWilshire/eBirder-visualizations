@@ -1,9 +1,10 @@
 <template lang="pug">
-.ui.stackable.two.column.grid(v-if="selected")
+.ui.basic.segment(v-bind:class="{ loading: loading }" v-if="selected")
+  .ui.stackable.two.column.grid
     .column()
       .ui.rounded.fluid.image
         img(:src="imageUrl")
-        .ui.bottom.attached.label {{ info ? info.imageCaption : 'No caption found.'}}
+        .ui.bottom.attached.label(v-if="info") {{ info ? info.imageCaption : 'No caption found.'}}
     .column
       p {{ text }}
 </template>
@@ -22,13 +23,23 @@ export default {
   asyncComputed: {
     imageUrl () {
       this.imageUrl = ''
-      return wikiApi.page(this.selected).then(x => x.mainImage())
+      var vm = this
+      return wikiApi.page(this.selected).then(x => {
+        vm.loading = false
+        return x.mainImage()
+      })
     },
     info () {
+      this.info = {}
       return wikiApi.page(this.selected).then(x => x.info())
     },
     text () {
-      return wikiApi.page(this.selected).then(x => x.summary())
+      var vm = this
+      this.text = 'Waiting for Wikipedia...'
+      return wikiApi.page(this.selected).then(x => {
+        vm.loading = false
+        return x.summary()
+      })
     }
   }
 }
