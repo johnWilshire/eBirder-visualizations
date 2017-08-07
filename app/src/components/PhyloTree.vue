@@ -26,6 +26,10 @@ div
           .ui.radio.checkbox
             input(type='radio' v-model="selectedTree"  value="life")
             label Life
+        .field
+          .ui.radio.checkbox
+            input(type='radio' v-model="selectedTree"  value="vege")
+            label Vegetables
     .ui.divider(v-if="selectedTree === 'bird'")
     table.ui.center.aligned.single.line.table(v-if="selectedTree === 'bird'")
       thead
@@ -49,18 +53,21 @@ div
 </template>
 
 <script>
-import jetz from 'tree/jetz_family_tree'
-import lifeRaw from 'tree/life'
+// Components
 import {tree} from './vue-d3-tree'
 import WikiSummary from './WikiSummary'
 import attribution from './Attribution'
 import myHeader from './Header'
+// Tree data
+import rawTrees from 'tree/trees'
 // think of a better name
-var treeData = require('./parseNewick')
-var trees = {
-  bird: treeData.parseNewick(jetz.newick),
-  life: treeData.parseNewick(lifeRaw.newick)
-}
+var parseNewick = require('./parseNewick')
+
+var trees = {}
+Object.keys(rawTrees).forEach(x => {
+  trees[x] = parseNewick.parseNewick(rawTrees[x])
+})
+
 export default {
   name: 'phylo-tree',
   data () {
@@ -75,7 +82,7 @@ export default {
         will: 0
       },
       selectedTree: 'bird',
-      seen: treeData.seen,
+      seen: parseNewick.seen,
       loading: false
     }
   },
