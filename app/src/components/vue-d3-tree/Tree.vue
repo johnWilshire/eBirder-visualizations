@@ -368,6 +368,12 @@ export default {
         this.transformSvg(transitiong, size)
       }
     },
+    mouseovered (active) {
+      return function (d) {
+        d3.select(this).classed('label--active:hover', active)
+        // d3.select(d.linkExtensionNode).classed("link-extension--active", active).each(this.moveToFront)
+      }
+    },
 
     zoomed (g) {
       return () => {

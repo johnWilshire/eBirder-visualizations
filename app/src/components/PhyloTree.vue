@@ -1,6 +1,5 @@
 <template lang="pug">
 div
-  // iframe
   tree.tree(
     :data="treeData" 
     layoutType="radial"
@@ -11,7 +10,8 @@ div
     :margin-y="0"
     :person="selectedPerson"
     v-on:clicked="clicked"
-    ramp="interpolateYlGnBu")
+    ramp="interpolateYlGnBu"
+    )
 
   .ui.raised.container.segment(v-bind:class="{ loading: loading }")
     my-header(v-bind:main="selectedLeaf ? selectedLeaf : 'Select a family to begin'", v-bind:sub="common")
@@ -95,6 +95,12 @@ export default {
     },
     recolor: function (person) {
       this.selectedPerson = person
+    },
+    notNullColor (d) {
+      return x => '#F00'
+      // d3.scaleOrdinal()
+         //  .domain(['Bacteria', 'Eukaryota', 'Archaea'])
+         //  .range(d3.schemeCategory10)
     }
   },
   watch: {

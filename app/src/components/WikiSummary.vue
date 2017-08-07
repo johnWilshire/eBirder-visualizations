@@ -1,6 +1,6 @@
 <template lang="pug">
 .ui.stackable.two.column.grid(v-if="selected")
-    .column(v-if="imageUrl")
+    .column()
       .ui.rounded.fluid.image
         img(:src="imageUrl")
         .ui.bottom.attached.label {{ info ? info.imageCaption : 'No caption found.'}}
@@ -21,6 +21,7 @@ export default {
   },
   asyncComputed: {
     imageUrl () {
+      this.imageUrl = ''
       return wikiApi.page(this.selected).then(x => x.mainImage())
     },
     info () {
