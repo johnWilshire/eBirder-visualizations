@@ -15,17 +15,14 @@ var wikiApi = wiki({apiUrl: 'https://en.wikipedia.org/w/api.php'})
 export default {
   name: 'wiki-summary',
   props: ['selected'],
-  data () {
-    return {
-      loading: true
+  watch: {
+    selected () {
+      this.loading = true
     }
   },
   asyncComputed: {
     imageUrl () {
-      this.imageUrl = ''
-      var vm = this
       return wikiApi.page(this.selected).then(x => {
-        vm.loading = false
         return x.mainImage()
       })
     },
@@ -35,7 +32,6 @@ export default {
     },
     text () {
       var vm = this
-      this.text = 'Waiting for Wikipedia...'
       return wikiApi.page(this.selected).then(x => {
         vm.loading = false
         return x.summary()
