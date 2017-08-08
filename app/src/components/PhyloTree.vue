@@ -11,12 +11,16 @@ div
     :person="selectedPerson"
     v-on:clicked="clicked"
     ramp="interpolateYlGnBu"
+    data-step="2"
+    data-intro="This is a phylogeny of all bird families.\n You can click on the names to learn more about them! Try it!"
     )
 
   .ui.raised.container.segment
-    my-header(v-bind:main="selectedLeaf ? selectedLeaf : 'Select a family to begin'", v-bind:sub="common")
+    my-header(v-if="selectedLeaf"
+              v-bind:main="selectedLeaf ? selectedLeaf : ''", 
+              v-bind:sub="common")
     .ui.horizontal.divider Which Tree:
-    .ui.center.aligned.basic.segment
+    .ui.center.aligned.basic.segment(data-step="3" data-intro="You can also change the tree!")
       .ui.radio.checkbox
         input(type='radio' v-model="selectedTree" value="bird" checked='checked')
         label Birds
@@ -32,7 +36,9 @@ div
         tr
           th Total in Family
           th(v-on:click="recolor('corey')"
-            v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']") Corey
+            v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']"
+            data-step="4"
+            data-intro="You can color the tips by the proportion of bird species seen in that family!") Corey
           th(v-on:click="recolor('jim')"
             v-bind:class="[selectedPerson == 'jim' ? 'positive' : '']") Jim
           th(v-on:click="recolor('will')"

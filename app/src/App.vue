@@ -1,6 +1,6 @@
 <template lang="pug">
 #app
-  h1 Family Birding
+  my-menu
   phylo-tree
     // over-time
     // family-table
@@ -10,19 +10,18 @@
 // import FamilyTable from './components/FamilyTable'
 // import OverTime from './components/OverTime'
 import PhyloTree from './components/PhyloTree'
+import MyMenu from './components/MyMenu'
 export default {
   name: 'app',
   components: {
     // FamilyTable,
     // OverTime,
-    PhyloTree
+    PhyloTree,
+    MyMenu
   }
 }
 </script>
 
 <style>
-h1 {
-  text-align: center;
-  padding-top: 1em;
-}
+@import './assets/introjs.css'
 </style>
