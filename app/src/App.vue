@@ -1,7 +1,6 @@
 <template lang="pug">
 #app
-  .ui.container
-    h1.ui.center.aligned.header Family Birding
+  h1 Family Birding
   phylo-tree
     // over-time
     // family-table
@@ -23,6 +22,7 @@ export default {
 
 <style>
 h1 {
-  text-align: center;  
+  text-align: center;
+  padding-top: 1em;
 }
 </style>

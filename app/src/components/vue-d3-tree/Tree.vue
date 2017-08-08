@@ -206,7 +206,11 @@ export default {
 
       const text = allNodes.append('text')
         .attr('dy', '.35em')
-        .text(d => d.data[this.nodeText])
+        .text(d => {
+          if (!d.data[this.nodeText].match(/ subclade/)) { // removes labels that are subclades
+            return d.data[this.nodeText]
+          }
+        })
         .on('click', d => {
           currentSelected = (currentSelected === d) ? null : d
           d3.event.stopPropagation()

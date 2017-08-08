@@ -15,10 +15,10 @@ export default {
     }
   }
 }
-</script>z
+</script>
 
 <style scoped>
-a {
-  margin: 1em;
+h2 {
+  padding: 1em;
 }
 </style>

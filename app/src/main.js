@@ -7,6 +7,8 @@ import VueScrollTo from 'vue-scrollto'
 
 Vue.config.productionTip = false
 
+// window.introJS = require('intro.js').introJs
+// window.introJS().start()
 Vue.use(AsyncComputed)
 
 Vue.use(VueScrollTo)

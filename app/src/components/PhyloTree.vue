@@ -43,8 +43,8 @@ div
           td {{ people.corey }}
           td {{ people.jim }}
           td {{ people.will }}
-    .ui.horizontal.divider Summary
-    wiki-summary#summary(:selected="selectedLeaf")
+    .ui.horizontal.divider#summary Summary
+    wiki-summary(:selected="selectedLeaf")
   attribution
 </template>
 
