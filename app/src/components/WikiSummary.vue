@@ -23,7 +23,8 @@ export default {
       this.loading = true
     },
     imageUrl () {
-      if (this.imageUrl.length) {
+      console.log('image watch called')
+      if (Array.isArray(this.imageUrl)) {
         var filtered = this.imageUrl.filter(img => img.match(new RegExp(this.info.image + '$', 'i')))
         if (filtered) {
           this.imageUrl = filtered.pop()
@@ -35,12 +36,11 @@ export default {
   },
   asyncComputed: {
     imageUrl () {
-      var vm = this
       return wikiApi.page(this.selected).then(x => {
         return x.mainImage()
       })
       .catch(reason => {
-        vm.imageUrl = ''
+        console.log('main image failed: ' + reason)
         return wikiApi.page(this.selected)
           .then(page => page.images())
       })
@@ -48,6 +48,9 @@ export default {
     info () {
       this.info = {}
       return wikiApi.page(this.selected).then(x => x.info())
+        .catch(reason => {
+          console.log('page info failed' + reason)
+        })
     },
     text () {
       var vm = this

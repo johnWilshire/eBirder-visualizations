@@ -165,11 +165,6 @@ label {
   r: 2;
 }
 
-.treeclass .node--internal circle {
-  cursor: pointer;
-  fill:  #555;
-  r: 2;
-}
 .link-active {
   opacity: 1;
   stroke: #000;
@@ -188,10 +183,6 @@ label {
 .treeclass .nodetree.selected text {
   font-weight: bold;
   font-size: 1em;
-}
-
-.treeclass .node-internal text {
-  text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 
 .treeclass .linktree {
