@@ -1,11 +1,11 @@
 <template lang="pug">
 .ui.basic.segment(v-bind:class="{ loading: loading }" v-if="selected")
   .ui.stackable.two.column.grid
-    .column
-      .ui.rounded.fluid.image(if="imgU")
+    .column(if="imageUrl")
+      .ui.rounded.fluid.image
         img(:src="imageUrl")
         .ui.bottom.attached.label {{ info ? (info.imageCaption ? info.imageCaption : 'No caption found.') : 'No caption found.' }}
-    .column
+    .column(:style="[ imageUrl ? '' : 'two wide' ]")
       p(v-if="text") {{ text }}
       p(v-if="!text") No Wikipedia article found for 
         b {{selected}} &#x1F622
@@ -20,26 +20,26 @@ export default {
   watch: {
     selected () {
       this.loading = true
+    },
+    imageUrl () {
+      if (this.imageUrl.length) {
+        var filtered = this.imageUrl.filter(img => img.match(new RegExp(this.info.image + '$', 'i')))
+        if (filtered) {
+          this.imageUrl = filtered.pop()
+        } else {
+          this.imageUrl = 'https://via.placeholder.com/400?text=No+Image+Found'
+        }
+      }
     }
   },
   asyncComputed: {
     imageUrl () {
-      var vm = this
       return wikiApi.page(this.selected).then(x => {
-        return x.mainImage(x => {
-          return x
-        })
+        return x.mainImage()
       })
       .catch(reason => {
         return wikiApi.page(this.selected)
-          .then(page => page.images(x => {
-            if (x.length === 1) {
-              return x
-            } else if (vm.info) {
-              return x.filter(img => img.match(/vm.info.image/i))
-            }
-            return 'https://via.placeholder.com/400?text=No+Image+Found'
-          }))
+          .then(page => page.images())
       })
     },
     info () {
