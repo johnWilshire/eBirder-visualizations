@@ -11,7 +11,7 @@ txt %>% read_html() %>%
   .[-(1:7)] %>% 
   html_nodes("i a") %>% 
   html_attr("href") %>%
-  gsub('/wiki/', '', .) %>% Filter(function (x) grep("_", x), .)
+  gsub('/wiki/', '', .) %>% Filter(function (x) grep("_", x), .) -> want
 
 read.newick("tree/subtree-ottol-44565-Carnivora.tre") -> full
 # hax
@@ -22,5 +22,5 @@ full %>% drop.tip((1:length(.$tip.label))[-matches]) -> small
 # the other thing to try is:
 # but the tree it makes is a little boring
 # full %>% drop.leaves() -> small
-plot(small)
+plot(small, show.node.label = F)
 small %>% write.tree("tree/small_carn.tre")
