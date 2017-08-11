@@ -12,7 +12,7 @@ div
     v-on:clicked="clicked"
     ramp="interpolateYlGnBu"
     data-step="2"
-    data-intro="This is a phylogeny of all bird families.\n You can click on the names to learn more about them! Try it!"
+    data-intro="This is a phylogeny of all veges.\n You can click on the names to learn more about them! Try it!"
     )
 
   .ui.raised.container.segment
@@ -30,6 +30,9 @@ div
       .ui.radio.checkbox
         input(type='radio' v-model="selectedTree"  value="life")
         label Life
+      .ui.radio.checkbox
+        input(type='radio' v-model="selectedTree"  value="carnivora")
+        label Carnivora
     .ui.divider(v-if="selectedTree === 'bird'")
     table.ui.center.aligned.single.line.table(v-if="selectedTree === 'bird'")
       thead
@@ -49,7 +52,7 @@ div
           td {{ people.corey }}
           td {{ people.jim }}
           td {{ people.will }}
-    .ui.horizontal.divider#summary Summary
+    .ui.horizontal.divider(v-if="selectedLeaf")#summary Summary
     wiki-summary(:selected="selectedLeaf")
   attribution
 </template>
@@ -178,6 +181,8 @@ label {
 }
 .treeclass .nodetree text:hover {
   font-weight: bold;
+  background-color: #FFF;
+  display: block;
 }
 
 .treeclass .nodetree.selected text {

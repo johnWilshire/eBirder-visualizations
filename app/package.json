@@ -9,6 +9,7 @@
     "start": "node build/dev-server.js",
     "deploy": "node build/deploy.js",
     "build": "node build/build.js",
+    "bnd": "npm run build; npm run deploy;",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {

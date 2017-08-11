@@ -47,6 +47,10 @@ function parseNewick (s) {
         if (x === ')' || x === '(' || x === ',') {
           token = token.replace(/_/g, ' ')
           var name = token.replace(/ -.*/, '')
+          if (name.match(/ ott[0-9]+$/)) {
+            tree.ott = name.match(/ ott([0-9]+)$/)[2]
+            name = name.replace(/ ott[0-9]+$/, '')
+          }
           tree.name = name
           if (seen[name]) {
             tree.sp_count = seen[name].sp_count

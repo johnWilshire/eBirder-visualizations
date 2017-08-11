@@ -23,13 +23,13 @@ export default {
       this.loading = true
     },
     imageUrl () {
-      if (this.imageUrl.length || !this.imageUrl) {
+      if (this.imageUrl.length) {
         var filtered = this.imageUrl.filter(img => img.match(new RegExp(this.info.image + '$', 'i')))
         if (filtered) {
           this.imageUrl = filtered.pop()
-        } else {
-          this.imageUrl = 'https://via.placeholder.com/400?text=No+Image+Found'
         }
+      } else if (!this.imageUrl) {
+        this.imageUrl = 'https://via.placeholder.com/400?text=No+Image+Found'
       }
     }
   },
