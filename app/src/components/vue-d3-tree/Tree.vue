@@ -213,13 +213,17 @@ export default {
         })
         .on('click', d => {
           currentSelected = (currentSelected === d) ? null : d
+          this.mouseovered(false)(d)
           d3.event.stopPropagation()
           this.redraw()
           this.$emit('clicked', {element: d, data: d.data})
         })
+        .on('mouseover', this.mouseovered(true))
+        .on('mouseout', this.mouseovered(false))
 
       // branch coloring
-      updateLinks.attr('d', d => drawLink(originBuilder(d), originBuilder(d), this.layout))
+      updateLinks.each(function (d) { d.linkExtensionNode = this })
+        .attr('d', d => drawLink(originBuilder(d), originBuilder(d), this.layout))
         .attr('stroke', x => x.color ? x.color : '#555')
 
       const updateAndNewLinks = links.merge(updateLinks)
@@ -374,7 +378,13 @@ export default {
     },
     mouseovered (active) {
       return function (d) {
-        d3.select(this).classed('label--active:hover', active)
+        d3.select(this).classed('label-active', active)
+        d3.select(d.linkExtensionNode).classed('link-active', active)
+        d = d.parent
+        while (d) {
+          d3.select(d.linkExtensionNode).classed('link-active', active)
+          d = d.parent
+        }
         // d3.select(d.linkExtensionNode).classed("link-extension--active", active).each(this.moveToFront)
       }
     },

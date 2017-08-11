@@ -1,10 +1,11 @@
 <template lang="pug">
 .ui.basic.segment(v-bind:class="{ loading: loading }" v-if="selected")
   .ui.stackable.two.column.grid
-    .column(if="imageUrl")
+    .column
       .ui.rounded.fluid.image
         img(:src="imageUrl")
-        .ui.bottom.attached.label {{ info ? (info.imageCaption ? info.imageCaption : 'No caption found.') : 'No caption found.' }}
+        .ui.bottom.attached.label(v-if="imageUrl")
+          | {{ info ? (info.imageCaption ? info.imageCaption : selected) : 'No caption found.' }}
     .column(:style="[ imageUrl ? '' : 'two wide' ]")
       p(v-if="text") {{ text }}
       p(v-if="!text") No Wikipedia article found for 
@@ -22,7 +23,7 @@ export default {
       this.loading = true
     },
     imageUrl () {
-      if (this.imageUrl.length) {
+      if (this.imageUrl.length || !this.imageUrl) {
         var filtered = this.imageUrl.filter(img => img.match(new RegExp(this.info.image + '$', 'i')))
         if (filtered) {
           this.imageUrl = filtered.pop()
@@ -34,10 +35,12 @@ export default {
   },
   asyncComputed: {
     imageUrl () {
+      var vm = this
       return wikiApi.page(this.selected).then(x => {
         return x.mainImage()
       })
       .catch(reason => {
+        vm.imageUrl = ''
         return wikiApi.page(this.selected)
           .then(page => page.images())
       })
