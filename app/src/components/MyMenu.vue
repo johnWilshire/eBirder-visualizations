@@ -6,9 +6,9 @@ div
         .item
           .ui.primary.button(v-on:click="tutorial") Tutorial
         .item
-          .ui.basic.button About
-  .ui.container(data-intro="Welcome to family birding")
-    h1#masthead Family Birding
+          .ui.basic.button(href="#" v-scroll-to="'#attribution'") About
+  .ui.container(data-intro="Welcome to the Tree of Veggies!")
+    h1#masthead Tree of Veggies!
 </template>
 
 <script>

@@ -218,6 +218,7 @@ export default {
           this.$emit('clicked', {element: d, data: d.data})
         })
 
+      // branch coloring
       updateLinks.attr('d', d => drawLink(originBuilder(d), originBuilder(d), this.layout))
         .attr('stroke', x => x.color ? x.color : '#555')
 
@@ -238,7 +239,6 @@ export default {
         .attr('opacity', 1))
       // the outter circle
       // this is where we color the nodes
-
       allNodes.append('circle')
         .attr('fill', d => {
           return d3[this.ramp](d.data[this.person] / d.data.sp_count)

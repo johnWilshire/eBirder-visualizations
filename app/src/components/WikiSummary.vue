@@ -2,7 +2,7 @@
 .ui.basic.segment(v-bind:class="{ loading: loading }" v-if="selected")
   .ui.stackable.two.column.grid
     .column
-      .ui.rounded.fluid.image
+      .ui.rounded.fluid.image(if="imgU")
         img(:src="imageUrl")
         .ui.bottom.attached.label {{ info ? (info.imageCaption ? info.imageCaption : 'No caption found.') : 'No caption found.' }}
     .column
@@ -24,12 +24,22 @@ export default {
   },
   asyncComputed: {
     imageUrl () {
+      var vm = this
       return wikiApi.page(this.selected).then(x => {
-        return x.mainImage()
+        return x.mainImage(x => {
+          return x
+        })
       })
-      .catch((reason) => {
-        console.log(reason)
-        return 'https://via.placeholder.com/400?text=No+Image+Found'
+      .catch(reason => {
+        return wikiApi.page(this.selected)
+          .then(page => page.images(x => {
+            if (x.length === 1) {
+              return x
+            } else if (vm.info) {
+              return x.filter(img => img.match(/vm.info.image/i))
+            }
+            return 'https://via.placeholder.com/400?text=No+Image+Found'
+          }))
       })
     },
     info () {

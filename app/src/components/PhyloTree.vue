@@ -22,10 +22,10 @@ div
     .ui.horizontal.divider Which Tree:
     .ui.center.aligned.basic.segment(data-step="3" data-intro="You can also change the tree!")
       .ui.radio.checkbox
-        input(type='radio' v-model="selectedTree" value="bird" checked='checked')
+        input(type='radio' v-model="selectedTree" value="bird")
         label Birds
       .ui.radio.checkbox
-        input(type='radio' v-model="selectedTree"  value="vege")
+        input(type='radio' v-model="selectedTree"  value="vege" checked='checked')
         label Vegetables
       .ui.radio.checkbox
         input(type='radio' v-model="selectedTree"  value="life")
@@ -37,8 +37,8 @@ div
           th Total in Family
           th(v-on:click="recolor('corey')"
             v-bind:class="[selectedPerson == 'corey' ? 'positive' : '']"
-            data-step="4"
-            data-intro="You can color the tips by the proportion of bird species seen in that family!") Corey
+            data-step="4") Corey 
+            //data-intro="You can color the tips by the proportion of bird species seen in that family!"
           th(v-on:click="recolor('jim')"
             v-bind:class="[selectedPerson == 'jim' ? 'positive' : '']") Jim
           th(v-on:click="recolor('will')"
@@ -74,7 +74,7 @@ export default {
   name: 'phylo-tree',
   data () {
     return {
-      treeData: trees.bird,
+      treeData: trees.vege,
       selectedPerson: 'will',
       selectedLeaf: '',
       people: {
@@ -83,7 +83,7 @@ export default {
         jim: 0,
         will: 0
       },
-      selectedTree: 'bird',
+      selectedTree: 'vege',
       seen: parseNewick.seen
     }
   },
